@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Brain Wallet</title>
+    <style>
+        .main {
+            width: 700px;
+            max-width: 100%;
+            margin: auto;
+            line-height: 2;
+        }
+
+        #input {
+            display: block;
+            width: 90%;
+            max-width: 100%;
+            min-height: calc(1.5em + 0.75rem + 2px);
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+            #input:focus {
+                color: #495057;
+                background-color: #fff;
+                border-color: #8bbafe;
+                outline: 0;
+                box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+            }
+
+        .eg {
+            font-size: .8rem;
+            color: #787878;
+            font-style: italic;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <h1>Brain Wallet</h1>
+        <textarea id="input"></textarea>
+        <br />
+        <div class="eg">在输入框中输入一段话，会自动生成私钥。页面加载成功后，请断网运行，也可以将页面保存下来，离线运行！</div>
+        <div class="eg">例: <span onclick="ClickFunction(this)">他，苟利国家生死以，岂因祸福避趋之。~~19260817~~</span></div>
+        <div class="eg">例: <span onclick="ClickFunction(this)">云想衣裳花想容， 春风拂槛露华浓。——唐﹒李白《清平调》</span></div>
+        <div class="eg"><a href="https://github.com/chenzhitong/BrainWallet">github.com/chenzhitong/BrainWallet</a></div class="eg">
+        
+        <br />
+        <div>生成的私钥</div>
+        <div>HEX: <span id="prikey"></span></div>
+        <div>WIF: <span id="wif"></span></div>
+        <br />
+    </div>
+    <script src="lib/js-sha256/sha256.min.js"></script>
+    <script src="lib/Base58.js/Base58.js"></script>
+    <script type="text/javascript">
+        var input = document.getElementById("input");
+        input.onkeydown = GetPriKey;
+        input.onchange = GetPriKey;
+        function GetPriKey() {
+            var prikey = sha256.array(input.value);
+            var data = [0x80].concat(prikey).concat([0x01]);
+            var checksum = sha256.array(sha256.array(data)).slice(0, 4);
+            var result = Base58.encode(data.concat(checksum));
+            document.getElementById("prikey").innerText = sha256.hex(input.value);
+            document.getElementById("wif").innerText = result;
+        }
+        function ClickFunction(obj) {
+            document.getElementById('input').value = obj.innerText; GetPriKey();
+        }
+    </script>
+</body>
+</html>
