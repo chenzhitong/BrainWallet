@@ -49,6 +49,7 @@
     <div class="main">
         <h1>Brain Wallet</h1>
         <textarea id="input"></textarea>
+        <input type="button" value="生成私钥" onclick="GetPriKey()" />
         <br />
         <div class="eg">在输入框中输入一段话，会自动生成私钥。页面加载成功后，请断网运行，也可以将页面保存下来，离线运行！</div>
         <div class="eg">例: <span onclick="ClickFunction(this)">他，苟利国家生死以，岂因祸福避趋之。~~19260817~~</span></div>
@@ -65,8 +66,6 @@
     <script src="lib/Base58.js/Base58.js"></script>
     <script type="text/javascript">
         var input = document.getElementById("input");
-        input.onkeydown = GetPriKey;
-        input.onchange = GetPriKey;
         function GetPriKey() {
             var prikey = sha256.array(input.value);
             var data = [0x80].concat(prikey).concat([0x01]);
